@@ -123,6 +123,9 @@ struct connected *connected_check_ptp(struct interface *ifp,
 			continue;
 		if (!CONNECTED_PEER(ifc) && !d)
 			return ifc;
+		/* XXX: an alias with the same prefixlen has non-NULL d. */
+		if (!CONNECTED_PEER(ifc))
+			return ifc;
 		if (CONNECTED_PEER(ifc) && d
 		    && prefix_same(ifc->destination, d))
 			return ifc;
