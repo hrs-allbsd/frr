@@ -2223,7 +2223,7 @@ ssize_t netlink_intf_msg_encode(uint16_t cmd,
 }
 
 /* Interface information read by netlink. */
-void interface_list(struct zebra_ns *zns)
+void interface_list(struct zebra_ns *zns, __attribute__((unused)) int ifindex)
 {
 	interface_lookup_netlink(zns);
 	/* We add routes for interface address,

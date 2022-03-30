@@ -287,7 +287,7 @@ static void interface_info_ioctl()
 }
 
 /* Lookup all interface information. */
-void interface_list(struct zebra_ns *zns)
+void interface_list(struct zebra_ns *zns, __attribute__((unused)) int ifindex)
 {
 
 	zlog_info("interface_list: NS %u", zns->ns_id);

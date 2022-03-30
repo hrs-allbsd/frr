@@ -445,21 +445,16 @@ static int ifan_read(struct if_announcemsghdr *ifan)
 				"%s: creating interface for ifindex %d, name %s",
 				__func__, ifan->ifan_index, ifan->ifan_name);
 
-		/* Create Interface */
-		ifp = if_get_by_name(ifan->ifan_name, VRF_DEFAULT,
-				     VRF_DEFAULT_NAME);
-		if_set_index(ifp, ifan->ifan_index);
-
-		if_get_metric(ifp);
-		if_add_update(ifp);
+		/*
+		 * interface_list() creates the arrived interface:
+		 * if_sysctl.c: ifm_read() (i.e. RTM_IFINFO from
+		 *   the sysctl interface) calls if_add_update().
+		 * if_ioctl.c: interface_list_ioctl() calls if_add_update().
+		 */
+		interface_list(NULL, ifan->ifan_index);
 	} else if (ifp != NULL && ifan->ifan_what == IFAN_DEPARTURE)
 		if_delete_update(&ifp);
 
-	if (ifp) {
-		if_get_flags(ifp);
-		if_get_mtu(ifp);
-		if_get_metric(ifp);
-	}
 	if (IS_ZEBRA_DEBUG_KERNEL)
 		zlog_debug("%s: interface %s index %d", __func__,
 			   ifan->ifan_name, ifan->ifan_index);

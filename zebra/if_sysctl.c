@@ -85,7 +85,7 @@ void ifstat_update_sysctl(void)
 }
 
 /* Interface listing up function using sysctl(). */
-void interface_list(struct zebra_ns *zns)
+void interface_list(struct zebra_ns *zns, int ifindex)
 {
 	caddr_t ref, buf, end;
 	size_t bufsiz;
@@ -94,8 +94,10 @@ void interface_list(struct zebra_ns *zns)
 #define MIBSIZ 6
 	int mib[MIBSIZ] = {
 		CTL_NET,       PF_ROUTE, 0, 0, /*  AF_INET & AF_INET6 */
-		NET_RT_IFLIST, 0};
+		NET_RT_IFLIST, ifindex};
 
+	if (zns == NULL)
+		zns = ns_get_default();
 	if (zns->ns_id != NS_DEFAULT) {
 		zlog_debug("interface_list: ignore NS %u", zns->ns_id);
 		return;
