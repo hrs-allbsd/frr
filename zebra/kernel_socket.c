@@ -1352,12 +1352,12 @@ static void kernel_read(struct thread *thread)
 			flog_err(EC_ZEBRA_RECVMSG_OVERRUN,
 				 "routing socket overrun: %s",
 				 safe_strerror(errno));
-			/*
-			 *  In this case we are screwed.
-			 *  There is no good way to
-			 *  recover zebra at this point.
+			/* XXX:
+			 * ENOBUFS indicates a temporary resource
+			 * shortage and is not harmful for consistency of
+			 * reading the routing socket.  Ignore it.
 			 */
-			exit(-1);
+			return;
 		}
 		if (errno != EAGAIN && errno != EWOULDBLOCK)
 			flog_err_sys(EC_LIB_SOCKET, "routing socket error: %s",
