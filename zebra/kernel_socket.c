@@ -646,11 +646,7 @@ int ifm_read(struct if_msghdr *ifm)
 #endif /* HAVE_BSD_IFI_LINK_STATE */
 
 		if_flags_update(ifp, ifm->ifm_flags);
-#if defined(__bsdi__)
-		if_kvm_get_mtu(ifp);
-#else
 		if_get_mtu(ifp);
-#endif /* __bsdi__ */
 		if_get_metric(ifp);
 
 		/*
@@ -725,11 +721,7 @@ int ifm_read(struct if_msghdr *ifm)
 		}
 #endif /* RTM_IFANNOUNCE */
 		if (ifp && if_is_up(ifp)) {
-#if defined(__bsdi__)
-			if_kvm_get_mtu(ifp);
-#else
 			if_get_mtu(ifp);
-#endif /* __bsdi__ */
 			if_get_metric(ifp);
 		}
 	}
@@ -1030,10 +1022,6 @@ void rtm_read(struct rt_msghdr *rtm)
 
 #ifdef RTF_CLONED /*bsdi, netbsd 1.6*/
 	if (flags & RTF_CLONED)
-		return;
-#endif
-#ifdef RTF_WASCLONED /*freebsd*/
-	if (flags & RTF_WASCLONED)
 		return;
 #endif
 
