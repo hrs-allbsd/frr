@@ -281,13 +281,15 @@ static int kernel_rtm(int cmd, const struct prefix *p,
 					 __func__, error, cmd);
 			continue;
 
-			/* Note any unexpected status returns */
+			/* Silently ignore removal of a re not in FIB. */
 		case ZEBRA_ERR_RTNOEXIST:
 			if (cmd != RTM_DELETE)
 				flog_err(EC_LIB_SYSTEM_CALL,
 					 "%s: rtm_write() returned %d for command %d",
 					 __func__, error, cmd);
 			break;
+
+			/* Note any unexpected status returns */
 		default:
 			flog_err(
 				EC_LIB_SYSTEM_CALL,
